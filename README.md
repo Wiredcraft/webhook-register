@@ -35,12 +35,26 @@ Simple Python webapp that register webhooks.
   - ERROR: 404 + webhook ID not found
   - ERROR: 500 + error message
 
+## Trigger hook
+
+1. User sends POST request to API, including webhook key in the URL
+2. API queries Redis and retrieve value associated to the provided webhook key
+3. API print on the console the content of the redis value previously fetched
+4. API returns JSON message to the user:
+  - SUCCESS: 201 + "web hook triggered"
+  - ERROR: 404 + webhook ID not found
+  - ERROR: 500 + error message
+
 # TODO
 
 - Prepare simple falcon HTTP service
-- register POST / GET routes (to be defined)
+- register POST / GET routes - URL to be defined, for ex.:
+  - POST http://localhost:8000/webhook - create hook
+  - GET http://localhost:8000/webhook - get all hooks list
+  - GET http://localhost:8000/webhook/{id} - get hook ID content
+  - POST http://localhost:8000/webhook/{id} - trigger hook ID
 - define proper format of the arguments
-- establish connection to Redis to get / set the keys
+- establish connection to Redis to get / set / list the keys
 - create logic to generate the key ID (hash / UUID)
 
 # Guidelines
@@ -49,6 +63,7 @@ Simple Python webapp that register webhooks.
 - Documentation if required to explain complex logic
 - Documentation on how to run
 - Config file to define (at least): HTTP listening address/port, Redis host/port
+- Ensure the messages are saved and loaded as JSON in Redis
 
 # Optional
 

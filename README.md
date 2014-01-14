@@ -7,6 +7,16 @@ Simple Python webapp that register webhooks.
 - **API**: Python web service, using [Falcon](http://falconframework.org/) framework.
 - **Storage**: Redis, using [redis-py](https://github.com/andymccurdy/redis-py) as python redis library.
 
+# Example
+
+User registers a webhook:
+ - POST request to http://localhost:8000/webhook with userid=testuser
+  - Receives asd6f8ads6gf8dsg87s (uuid) as response
+
+User triggers webhook:
+ - GET request to http://localhost:8000/webhook/asd6f8ads6gf8dsg87s
+  - Triggers a webhook handler with `testuser` as argument.
+
 # Workflow
 
 ## Create
@@ -17,23 +27,6 @@ Simple Python webapp that register webhooks.
 4. API returns JSON message to the user:
   - **SUCCESS**: returns code `200`, including the hash as the hook ID; 
   - **ERROR**: returns code `500`, including error message
-
-## Get all hooks
-
-1. User sends GET request to API
-2. API queries Redis and retrieve all the webhook keys
-3. API returns JSON message to the user:
-  - **SUCCESS**: `200` + array of webhook keys
-  - **ERROR**: `500` + error message
-
-## Get single hook
-
-1. User sends GET request to API, including webhook key
-2. API queries Redis and retrieve value associated to the provided webhook key
-3. API returns JSON message to the user:
-  - **SUCCESS**: `200` + content of the key
-  - **ERROR**: `404` + webhook ID not found
-  - **ERROR**: `500` + error message
 
 ## Trigger hook
 
@@ -50,12 +43,11 @@ Simple Python webapp that register webhooks.
 - Prepare simple falcon HTTP service
 - register POST / GET routes - URL to be defined, for ex.:
   - POST `http://localhost:8000/webhook` - create hook
-  - GET `http://localhost:8000/webhook` - get all hooks list
-  - GET `http://localhost:8000/webhook/{id}` - get hook ID content
   - POST `http://localhost:8000/webhook/{id}` - trigger hook ID
 - define proper format of the arguments
 - establish connection to Redis to get / set / list the keys
 - create logic to generate the key ID (hash / UUID)
+- Execute a dummy-function that is triggered when webhook is triggered giving userid to the handler.
 
 # Guidelines
 
